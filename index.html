@@ -102,6 +102,10 @@
       script.src = "./solvers/"+result["team"]+".js";
       document.getElementById("teamname").innerHTML = result['team'];
       var speed = result['speed'] || 1000;
+      
+      if(result['verbose'])
+        driver.setVerbose(parseInt(result['verbose']));
+
       script.onload = function(){
         var solver = window[result['team']];
         if( solver )

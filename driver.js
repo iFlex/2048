@@ -1,15 +1,18 @@
-var verbose = false;
 function Driver2048(_solver,spd) {
   var size = 4;
   var speed = spd || 1;
   if(!size || size < 2)
     size = 2;
 
+  var verbose = false;
   var gameHandle = new GameManager(size, KeyboardInputManager, HTMLActuator, LocalStorageManager);
   var solver  = _solver;
   var totalMoves = 0;
   var interval = 0;
   var moveQ = [];
+  //evaluation
+  var startTime = 0;
+  var endTime = 0;
   //debugging and play around
   this.board = gameHandle;
   
@@ -35,16 +38,24 @@ function Driver2048(_solver,spd) {
     return _getGrid();
   }
 
-  this.getScore = function(){
+  function _getScore(total){
     var grid = _getGrid();
     var max = grid[0][0];
 
     for( var i = 0 ; i < size ; ++ i )
-      for( var j = 0 ; j < size ; ++ j )
-        if( max < grid[i][j] )
+      for( var j = 0 ; j < size ; ++ j ){
+        if(total) {
+          if( i || j )
+            max += grid[i][j] 
+        }
+        else if ( max < grid[i][j] )
           max = grid[i][j];
+      }
     
     return max;
+  }
+  this.getScore = function(){
+    return _getScore();
   }
 
   function _solve(){
@@ -60,16 +71,23 @@ function Driver2048(_solver,spd) {
       if( moveQ[0] >= 0 && moveQ[0] < 4)
       {
         gameHandle.move(moveQ[0]);
-        if(verbose) console.log("Moved:"+moveQ[0]+" total:"+totalMoves);
+        if( verbose == 1 ) console.log("Moved:"+moveQ[0]+" total:"+totalMoves);
       }
       else
-        if(verbose) console.log("Illegal move:"+moveQ[0]);
+        if( verbose == 1 ) console.log("Illegal move:"+moveQ[0]);
       
       moveQ.shift();
     }
     
-    if( gameHandle.isGameTerminated() )
+    if( gameHandle.isGameTerminated() ){
+      if( verbose == 2 )
+      {
+        endTime = new Date().getTime();
+        console.log("Score,moves,time(seconds)");
+        console.log(_getScore()+","+totalMoves+","+(endTime - startTime)/1000);
+      }
       clearInterval(interval);
+    }
   }
 
   this.solve = function( sol , spd ){
@@ -87,10 +105,19 @@ function Driver2048(_solver,spd) {
     
     if(solver && solver.step)
     { 
+      if( verbose == 2 ){
+        startTime = new Date().getTime();
+        speed = 1;
+      }
+
       _solve();
       interval = setInterval(_solve,speed);
     }
     else
       alert("Sorry you did not provide a proper solver object! Please check it and try again...");
+  }
+
+  this.setVerbose = function(_v){
+    verbose = _v; 
   }
 }
