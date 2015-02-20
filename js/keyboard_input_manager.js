@@ -130,6 +130,7 @@ KeyboardInputManager.prototype.listen = function () {
 KeyboardInputManager.prototype.restart = function (event) {
   event.preventDefault();
   this.emit("restart");
+  driver.solve();
 };
 
 KeyboardInputManager.prototype.keepPlaying = function (event) {
