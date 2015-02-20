@@ -4,7 +4,7 @@ function DumbSolver()
   this.step = function(grid){
     var moves = [];
     i++;
-    i%=3; 
+    i%=4; 
     moves.push(i)
     return moves;
   }

@@ -4,8 +4,9 @@ function Driver2048(_solver,spd) {
   if(!size || size < 2)
     size = 2;
 
-  var verbose = false;
   var gameHandle = new GameManager(size, KeyboardInputManager, HTMLActuator, LocalStorageManager);
+  var moveMap = ["UP   ","RIGHT","DOWN ","LEFT "];
+  var verbose = false;
   var solver  = _solver;
   var totalMoves = 0;
   var interval = 0;
@@ -71,7 +72,7 @@ function Driver2048(_solver,spd) {
       if( moveQ[0] >= 0 && moveQ[0] < 4)
       {
         gameHandle.move(moveQ[0]);
-        if( verbose == 1 ) console.log("Moved:"+moveQ[0]+" total:"+totalMoves);
+        if( verbose == 1 ) console.log(moveQ[0]+" "+moveMap[moveQ[0]]+" moves:"+totalMoves+" current maximum:"+_getScore());
       }
       else
         if( verbose == 1 ) console.log("Illegal move:"+moveQ[0]);
