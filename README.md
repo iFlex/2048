@@ -61,6 +61,7 @@ the moves are mapped as follows:
 2 = DOWN
 3 = LEFT
 
+You can either name your solver class "Solver" or give it the same name as the file it is in.
 Good luck!
 
 ### Contributions
@@ -77,7 +78,7 @@ Other notable contributors:
 
 Many thanks to [rayhaanj](https://github.com/rayhaanj), [Mechazawa](https://github.com/Mechazawa), [grant](https://github.com/grant), [remram44](https://github.com/remram44) and [ghoullier](https://github.com/ghoullier) for the many other good contributions.
 
-- [Milorad Liviu Felix](https://github.com/iFlex) added driver.js wrapper to allow solving the game with a script ( for the purpose of a competition for Glasgow University Tech Society
+- [Milorad Liviu Felix](https://github.com/iFlex) added driver.js wrapper to allow solving the game with a script - for the purpose of a competition for Glasgow University Tech Society
 
 ## License
 2048 is licensed under the [MIT license.](https://github.com/gabrielecirulli/2048/blob/master/LICENSE.txt)

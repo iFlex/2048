@@ -107,7 +107,7 @@
         driver.setVerbose(parseInt(result['verbose']));
 
       script.onload = function(){
-        var solver = window[result['team']];
+        var solver = window[result['team']] || window['Solver'];
         if( solver )
           driver.solve(new solver,speed);
         else
