@@ -95,9 +95,15 @@ function Driver2048(_solver,spd) {
       clearInterval(interval);
     }
   }
+  
+  this.step = function(){
+    if(solver && solver.step)
+      _solve();
+    else
+      alert("Sorry you did not provide a proper solver object! Please check it and try again...");
+  }
 
   this.solve = function( sol , spd ){
-    
     if(!gameHandle)
       gameHandle = new GameManager(size, KeyboardInputManager, HTMLActuator, LocalStorageManager);
 
