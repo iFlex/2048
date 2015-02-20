@@ -56,7 +56,8 @@ Good luck!
 
 ### Contributions
 
-[Anna Harren](https://github.com/iirelu/) and [sigod](https://github.com/sigod) are maintainers for this repository.
+Original Creators
+[Anna Harren](https://github.com/iirelu/) and [sigod](https://github.com/sigod) are maintainers for the original repository.
 
 Other notable contributors:
 
