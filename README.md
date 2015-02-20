@@ -30,15 +30,14 @@ function DumbSolver()
   }
 }
 ```
-
-the step function will be called periodically from inside driver.js ( at the speed that you set )
+The step function will be called periodically from inside driver.js ( at the speed that you set ).
 You receive the status of the grid as a parameter, the cells are stored in the following fashion:
-an array of arrays grid, where each array grid[i] is a clumn.
-grid[0] is column 0, grid[1] is column 1
-so grid[0][0] is the element on the first row and first column, grid[1][0] first row second column, etc
+an array of arrays representing the grid, where each array grid[i] is a column.
+grid[0] is column 0, grid[1] is column 1, this means grid[0][0] is the element on the first row and first column, 
+grid[1][0] first row second column, etc
 
 use this grid to decide your next move or multiple moves. 
-return the moves in order in an array []. 
+return the moves in the order you want them performed in an array []. 
 example:
 ```
 var moves = [];
