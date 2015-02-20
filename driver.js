@@ -3,8 +3,13 @@ function Driver2048(_solver,spd) {
   var speed = spd || 1;
   if(!size || size < 2)
     size = 2;
+  
+  var gameHandle = 0;
+  this.setGameManager = function(gameM)
+  {
+    gameHandle = gameM;
+  }
 
-  var gameHandle = new GameManager(size, KeyboardInputManager, HTMLActuator, LocalStorageManager);
   var moveMap = ["UP   ","RIGHT","DOWN ","LEFT "];
   var verbose = false;
   var solver  = _solver;
@@ -92,6 +97,10 @@ function Driver2048(_solver,spd) {
   }
 
   this.solve = function( sol , spd ){
+    
+    if(!gameHandle)
+      gameHandle = new GameManager(size, KeyboardInputManager, HTMLActuator, LocalStorageManager);
+
     if(sol)
       solver = sol;
     if(spd) 
