@@ -16,6 +16,7 @@ index.html?team=DumbSolver&speed=100 ( range [ 1 - your maximum magic patience n
 
 How to build a solver? Here's the simplest example
 
+```
 function DumbSolver()
 {
   var i = 0;
@@ -28,6 +29,7 @@ function DumbSolver()
     return moves;
   }
 }
+```
 
 the step function will be called periodically from inside driver.js ( at the speed that you set )
 You receive the status of the grid as a parameter, the cells are stored in the following fashion:
@@ -38,12 +40,13 @@ so grid[0][0] is the element on the first row and first column, grid[1][0] first
 use this grid to decide your next move or multiple moves. 
 return the moves in order in an array []. 
 example:
+```
 var moves = [];
 moves.push(0);
 moves.push(1);
 moves.push(2);
 return moves;
-
+```
 the moves are mapped as follows:
 0 = UP
 1 = RIGHT
