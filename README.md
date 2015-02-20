@@ -1,7 +1,7 @@
 # 2048
 Originally Made just for fun. [Play it here!](http://gabrielecirulli.github.io/2048/)
 
-How to work with the automatic solver.
+How to work with the automatic solver?
 This modified version of 2048 allows you to run the game with various solving scripts.
 
 How to run one: you need to have a script that solves the game in ./solvers folder
@@ -12,7 +12,8 @@ index.html?team=DumbSolver
 note the parameter team will specify what script to use to solve the game.
 You can also set the speed at which the game will be solved
 
-index.html?team=DumbSolver&speed=100 ( range [ 1 - your maximum magic patience number here ] )
+index.html?team=DumbSolver&speed=100
+( range [ 1 - your maximum magic patience number here ] )
 
 How to build a solver? Here's the simplest example
 
@@ -30,7 +31,7 @@ function DumbSolver()
   }
 }
 ```
-The step function will be called periodically from inside driver.js ( at the speed that you set ).
+The step function will be called periodically from inside driver.js ( at the speed that you set ) untill the game is over.
 You receive the status of the grid as a parameter, the cells are stored in the following fashion:
 an array of arrays representing the grid, where each array grid[i] is a column.
 grid[0] is column 0, grid[1] is column 1, this means grid[0][0] is the element on the first row and first column, 
