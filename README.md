@@ -15,6 +15,14 @@ You can also set the speed at which the game will be solved
 index.html?team=DumbSolver&speed=100
 ( range [ 1 - your maximum magic patience number here ] )
 
+To check how your algorithm is doing use
+index.html?team=DumbSolver&speed=1000&verbose=1
+
+To evaluate how fast and how far your algorithm can get
+index.html?team=DumbSolver&verbose=2
+
+In your own solver you can use console.log("message here"); to print out debug information
+
 How to build a solver? Here's the simplest example
 
 ```
