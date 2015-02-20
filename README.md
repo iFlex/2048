@@ -1,9 +1,56 @@
 # 2048
-A small clone of [1024](https://play.google.com/store/apps/details?id=com.veewo.a1024), based on [Saming's 2048](http://saming.fr/p/2048/) (also a clone).
+Originally Made just for fun. [Play it here!](http://gabrielecirulli.github.io/2048/)
 
-Made just for fun. [Play it here!](http://gabrielecirulli.github.io/2048/)
+How to work with the automatic solver.
+This modified version of 2048 allows you to run the game with various solving scripts.
 
-The official app can also be found on the [Play Store](https://play.google.com/store/apps/details?id=com.gabrielecirulli.app2048) and [App Store!](https://itunes.apple.com/us/app/2048-by-gabriele-cirulli/id868076805)
+How to run one: you need to have a script that solves the game in ./solvers folder
+say the name of the solver is DumbSolver.js, to run it you simply need to open
+
+index.html?team=DumbSolver
+
+note the parameter team will specify what script to use to solve the game.
+You can also set the speed at which the game will be solved
+
+index.html?team=DumbSolver&speed=100 ( range [ 1 - your maximum magic patience number here ] )
+
+How to build a solver? Here's the simplest example
+
+function DumbSolver()
+{
+  var i = 0;
+  
+  this.step = function(grid){
+    var moves = [];
+    i++;
+    i%=3; 
+    moves.push(i)
+    return moves;
+  }
+}
+
+the step function will be called periodically from inside driver.js ( at the speed that you set )
+You receive the status of the grid as a parameter, the cells are stored in the following fashion:
+an array of arrays grid, where each array grid[i] is a clumn.
+grid[0] is column 0, grid[1] is column 1
+so grid[0][0] is the element on the first row and first column, grid[1][0] first row second column, etc
+
+use this grid to decide your next move or multiple moves. 
+return the moves in order in an array []. 
+example:
+var moves = [];
+moves.push(0);
+moves.push(1);
+moves.push(2);
+return moves;
+
+the moves are mapped as follows:
+0 = UP
+1 = RIGHT
+2 = DOWN
+3 = LEFT
+
+Good luck!
 
 ### Contributions
 
@@ -18,21 +65,8 @@ Other notable contributors:
 
 Many thanks to [rayhaanj](https://github.com/rayhaanj), [Mechazawa](https://github.com/Mechazawa), [grant](https://github.com/grant), [remram44](https://github.com/remram44) and [ghoullier](https://github.com/ghoullier) for the many other good contributions.
 
-### Screenshot
-
-<p align="center">
-  <img src="http://pictures.gabrielecirulli.com/2048-20140309-234100.png" alt="Screenshot"/>
-</p>
-
-That screenshot is fake, by the way. I never reached 2048 :smile:
-
-## Contributing
-Changes and improvements are more than welcome! Feel free to fork and open a pull request. Please make your changes in a specific branch and request to pull into `master`! If you can, please make sure the game fully works before sending the PR, as that will help speed up the process.
-
-You can find the same information in the [contributing guide.](https://github.com/gabrielecirulli/2048/blob/master/CONTRIBUTING.md)
+- [Milorad Liviu Felix](https://github.com/iFlex) added driver.js wrapper to allow solving the game with a script ( for the purpose of a competition for Glasgow University Tech Society
 
 ## License
 2048 is licensed under the [MIT license.](https://github.com/gabrielecirulli/2048/blob/master/LICENSE.txt)
 
-## Donations
-I made this in my spare time, and it's hosted on GitHub (which means I don't have any hosting costs), but if you enjoyed the game and feel like buying me coffee, you can donate at my BTC address: `1Ec6onfsQmoP9kkL3zkpB6c5sA4PVcXU2i`. Thank you very much!

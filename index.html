@@ -103,7 +103,11 @@
       document.getElementById("teamname").innerHTML = result['team'];
       var speed = result['speed'] || 1000;
       script.onload = function(){
-        driver.solve(new DumbSolver(),speed);
+        var solver = window[result['team']];
+        if( solver )
+          driver.solve(new solver,speed);
+        else
+          alert("Sorry but the provided solver does not exist! Check if you have named it correctly ( same name as the filename )");
       }
       document.body.appendChild( script );
       document.title = result["team"];
