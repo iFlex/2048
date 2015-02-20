@@ -107,7 +107,7 @@
 
       script.onload = function(){
         var solver = window[result['team']] || window['Solver'];
-        if( solver )
+        if( solver  && !result['step'])
           driver.solve(new solver,speed);
         else
           alert("Sorry but the provided solver does not exist! Check if you have named it correctly ( same name as the filename )");
