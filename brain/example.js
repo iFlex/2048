@@ -33,7 +33,7 @@ var tdtrainer_options = {learning_rate:0.001, momentum:0.0, batch_size:64, l2_de
 // Other options, I don't understand yet those so no changing from the default values yet.
 var opt = {};
 opt.temporal_window = temporal_window;
-opt.experience_size = 30000;
+opt.experience_size = 3000;
 opt.start_learn_threshold = 1000;
 opt.gamma = 0.7;
 opt.learning_steps_total = 2000;//200000;
