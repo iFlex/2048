@@ -137,6 +137,11 @@ function brainTrain(delay){
         brain.backward(calculateReward());
         iterations++;
         
+        if(statsAfter.score == 512){
+            brainStop();
+            return;
+        }
+        
         if( statsAfter.score <= highscore && canRun) {
             setTimeout(trainStep,delay);        
         }
