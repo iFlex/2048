@@ -80,7 +80,7 @@ function brainTrain(delay){
         driver.applyMove( action );
         var crntScore = driver.getScore();
         var crntTrScr = driver.getTrueScore();
-        var reward = 0.0;//.5*(crntScore/highscore)+0.5*(crntScore - score)
+        var reward = 0.0;
         // Reward it for making more points
         // We can improve this after we have the pilot working
         
