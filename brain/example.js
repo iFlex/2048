@@ -101,13 +101,14 @@ function brainSetDriver(eldriver){
 
 function brainStop(){
     canRun = false;
-    // I still have to look up this function. But it should store export the network as a JSON file, which we can display in a textbox for the user to save
-    save_network_as_json();
     // Save network
-    saved_net = JSON.stringify( brain.value_net.toJSON() );
+    var saved_net = JSON.stringify( brain.value_net.toJSON() );
+    var filename = "brain"
+    var blob = new Blob([saved_net], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, filename+".json");
     // Load network
-    brain.value_net.fromJSON( JSON.parse( saved_net ) );
+    //brain.value_net.fromJSON( JSON.parse( saved_net ) );
     // Stop learning after loading the network
-    brain.epsilon_test_time = 0.0; // Stop making random choices
-    brain.learning = false; // And stop learning
+    //brain.epsilon_test_time = 0.0; // Stop making random choices
+    //brain.learning = false; // And stop learning
 }
