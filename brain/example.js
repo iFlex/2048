@@ -84,10 +84,15 @@ function brainTrain(delay){
         // Reward it for making more points
         // We can improve this after we have the pilot working
         
-        if( score > crntScore ) {
-            reward = 1.0;
+        if( score < crntScore ) {
+            reward += 0.5;
         }
+        if( trueScore < crntTrScr){
+            reward += 0.5;
+        }
+
         score = crntScore;
+        trueScore = crntTrScr;
         brain.backward(reward);
         
         if( score <= highscore && canRun) {
