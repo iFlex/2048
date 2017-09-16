@@ -12,7 +12,7 @@ var num_inputs = 4*4; // 4x4 grid with values
 var num_actions = 4; // Slide up,right,down,left
 var temporal_window = 1; // amount of temporal memory
 var network_size = num_inputs*temporal_window + num_actions*temporal_window + num_inputs; // This means the network will get its last temporal_memory input and output values to work with as well
-
+var driver = 0;
 ////////////////////
 // INITIALIZATION //
 ////////////////////
@@ -45,28 +45,49 @@ opt.tdtrainer_options = tdtrainer_options;
 
 var brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
 
-//////////////
-// TRAINING //
-//////////////
-
-// Highscore should probably be read from somewhere else, so we can set its goal somewhere
-var highscore = 2048;
-var score = 0;
-while( score <= highscore ) {
-    var input = preprocess_grid( get_grid() );
-    var action = brain.forward( input );
-    // action is a number in [0, num_actions) telling index of the action the agent chooses
-    // here, apply the action on environment and observe some reward. Finally, communicate it:
-    act_on_grid( action );
-    var reward = 0.0;
-    // Reward it for making more points
-    // We can improve this after we have the pilot working
-    if( score > get_score() ) {
-        reward = 1.0;
-    }
-    score = get_score();
-    brain.backward(reward);
+function normaliseValue(val){
+    return Math.log2(val)/32.0;
 }
 
+function serialiseGrid(grid){
+    var result = [];
+    for(var i = 0; i < grid.length; ++i){
+        for( var j = 0 ; j < grid[i].length; ++j){
+            result.push(normaliseValue(grid[i][j]));
+        }
+    }
+    return result;
+}
+
+function brainTrain(){
+    // Highscore should probably be read from somewhere else, so we can set its goal somewhere
+    var highscore = 2048;
+    var score = 0;
+    while( score <= highscore ) {
+        if(driver.isGameOver()){
+            driver.restart();
+        }
+
+        var input = preprocess_grid( driver.getGrid());
+        var action = brain.forward( input );
+        // action is a number in [0, num_actions) telling index of the action the agent chooses
+        // here, apply the action on environment and observe some reward. Finally, communicate it:
+        driver.applyMove( action );
+        var reward = 0.0;
+        var crntScore = driver.getScore();
+        // Reward it for making more points
+        // We can improve this after we have the pilot working
+        if( score > crntScore ) {
+            reward = 1.0;
+        }
+        score = crntScore;
+        brain.backward(reward);
+    }
+
+}
+
+function brainSetDriver(eldriver){
+    driver = eldriver;
+}
 // I still have to look up this function. But it should store export the network as a JSON file, which we can display in a textbox for the user to save
 save_network_as_json();

@@ -83,40 +83,14 @@
   <script src="js/local_storage_manager.js"></script>
   <script src="js/game_manager.js"></script>
   <script src="driver.js"></script>
-  <script src="js/application.js"></script>
+  <script src="./brain/example.js"></script>
   <script>
-  //specify team=<name of team> to load the appropriate solver object
-  function getJsonFromUrl() {
-    var query = location.search.substr(1);
-    var result = {};
-    query.split("&").forEach(function(part) {
-      var item = part.split("=");
-      result[item[0]] = decodeURIComponent(item[1]);
-    });
-    
-    if(result["team"])
-    {
-      var script = document.createElement( 'script' );
-      script.type = 'text/javascript';
-      script.src = "./solvers/"+result["team"]+".js";
-      document.getElementById("teamname").innerHTML = result['team'];
-      var speed = result['speed'] || 1000;
-      
-      if(result['verbose'])
-        driver.setVerbose(parseInt(result['verbose']));
-
-      script.onload = function(){
-        var solvegameHandler = window[result['team']] || window['Solver'];
-        if( solver  && !result['step'])
-          driver.solve(new solver,speed);
-        else
-          alert("Sorry but the provided solver does not exist! Check if you have named it correctly ( same name as the filename )");
-      }
-      document.body.appendChild( script );
-      document.title = result["team"];
-    }
-  }
-  getJsonFromUrl();
+  var driver = new Driver2048();
+  window.requestAnimationFrame(function () {
+    driver.setGameManager(new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager));
+    brainSetDriver();
+    brainTrain();
+  });
   </script>
 </body>
 </html>
