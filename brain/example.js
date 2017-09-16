@@ -10,7 +10,7 @@
 var num_inputs = 4*4; // 4x4 grid with values
 // We could also use it as 4x4x32 with a one-hot vector of dimension 32 instead of a linear value on the input
 var num_actions = 4; // Slide up,right,down,left
-var temporal_window = 1; // amount of temporal memory
+var temporal_window = 0; // amount of temporal memory
 var network_size = num_inputs*temporal_window + num_actions*temporal_window + num_inputs; // This means the network will get its last temporal_memory input and output values to work with as well
 var driver = 0;
 ////////////////////
@@ -65,6 +65,7 @@ var highscore = 2048;
 var score = 0;
 var trueScore = 0;
 var canRun = true;
+var IAmSoRandomLOL = 0
 
 function brainTrain(delay){
     // Highscore should probably be read from somewhere else, so we can set its goal somewhere
@@ -72,9 +73,30 @@ function brainTrain(delay){
         brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
     
     function trainStep(){
+        if( IAmSoRandomLOL > brain.learning_steps_total ) {
+            alert( "Stopped being random" );
+        }
         if(driver.isGameOver()){
+            brain.backward(-32.0); // Penalize for game over
+            IAmSoRandomLOL++;
             driver.restart();
-            brain.backward(-10);
+            // Reset state
+            //brain.state_window = new Array(brain.window_size);
+            //brain.action_window = new Array(brain.window_size);
+            //brain.reward_window = new Array(brain.window_size);
+            //brain.net_window = new Array(brain.window_size);
+            //for(var i = 0; i < brain.window_size; i++) {
+            //    this.net_window.shift();
+            //    this.net_window.push(net_input);
+            //    this.state_window.shift(); 
+            //    this.state_window.push(input_array);
+            //    this.action_window.shift(); 
+            //    this.action_window.push(action);
+            //}
+            // Reset score
+            var score = 0;
+            var trueScore = 0;
+
         }
 
         var input = serialiseGrid( driver.getGrid());
@@ -98,6 +120,7 @@ function brainTrain(delay){
         score = crntScore;
         trueScore = crntTrScr;
         brain.backward(reward);
+        IAmSoRandomLOL++;
         
         if( score <= highscore && canRun) {
             setTimeout(trainStep,delay);        
@@ -123,4 +146,25 @@ function brainStop(){
     // Stop learning after loading the network
     //brain.epsilon_test_time = 0.0; // Stop making random choices
     //brain.learning = false; // And stop learning
+}
+
+function sumArray(a) {
+    sum = 0;
+    for(var i = 0; i<a.length; i++){
+        sum += a[i];
+    }
+    return sum;
+}
+
+function meanArray(a) {
+    return sumArray( a ) / a.length;
+}
+
+function lastArray( a, _last ) {
+    var last = _last || 10;
+    l = [];
+    for(var i = a.length - 1; i>=0 && l.length < last; i--){
+        l.push( a[i] );
+    }
+    return l;
 }
