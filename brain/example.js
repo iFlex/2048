@@ -59,7 +59,7 @@ function serialiseGrid(grid){
     return result;
 }
 
-function brainTrain(){
+function brainTrain(delay){
     // Highscore should probably be read from somewhere else, so we can set its goal somewhere
     var highscore = 2048;
     var score = 0;
@@ -82,8 +82,15 @@ function brainTrain(){
         }
         score = crntScore;
         brain.backward(reward);
+        await sleep(delay);
     }
 
+}
+
+function sleep(){
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 }
 
 function brainSetDriver(eldriver){
