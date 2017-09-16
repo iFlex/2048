@@ -75,16 +75,19 @@ var statsAfter = {};
 var statsBefore = {};
 
 function calculateReward(){
-    /*var difs = {};
+    var difs = {};
     var lastNonZero = 0;
     for(var i in statsAfter.cellDistribution)
         difs[i] = statsAfter.cellDistribution[i];
+    var allZero = true;
     for(var i in statsBefore.cellDistribution){
         if(!difs[i])
             difs[i] = 0;
         difs[i] = difs[i] - statsBefore.cellDistribution[i];
+        if(difs[i] != 0)
+            allZero = false;
     }
-    var totalWeight = 0.0;
+    /*var totalWeight = 0.0;
     for(var i in difs){
         totalWeight += Math.log2(i);
     }
@@ -102,6 +105,8 @@ function calculateReward(){
     }
     return reward;
 */  
+    if(allZero)
+        return -1.0;
     return 1.0 - (2048.0 - statsAfter.score) / 2048.0;
     //console.log(statsBefore)
     //console.log(statsAfter)
@@ -141,7 +146,7 @@ function brainTrain(delay){
             brainStop();
             return;
         }
-        
+
         if( statsAfter.score <= highscore && canRun) {
             setTimeout(trainStep,delay);        
         }
