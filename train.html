@@ -106,7 +106,7 @@
         driver.setVerbose(parseInt(result['verbose']));
 
       script.onload = function(){
-        var solver = window[result['team']] || window['Solver'];
+        var solvegameHandler = window[result['team']] || window['Solver'];
         if( solver  && !result['step'])
           driver.solve(new solver,speed);
         else

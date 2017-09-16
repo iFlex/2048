@@ -40,10 +40,6 @@ function Driver2048(_solver,spd) {
     return grid;
   }
 
-  this.getGrid = function(){
-    return _getGrid();
-  }
-
   function _getScore(total){
     var grid = _getGrid();
     var max = grid[0][0];
@@ -60,8 +56,33 @@ function Driver2048(_solver,spd) {
     
     return max;
   }
+
+  function _applyMove(move){
+    gameHandle.move(move);
+  }
+
+  this.getGrid = function(){
+    return _getGrid();
+  }
+  
   this.getScore = function(){
     return _getScore();
+  }
+
+  this.applyMove = function(move){
+    _applyMove(move);
+  }
+
+  this.setVerbose = function(_v){
+    verbose = _v; 
+  }
+
+  this.restart = function(){
+    gameHandle.restart();
+  }
+
+  this.isGameOver = function(){
+    return gameHandle.isGameTerminated();
   }
 
   function _solve(){
@@ -76,7 +97,7 @@ function Driver2048(_solver,spd) {
       totalMoves ++;
       if( moveQ[0] >= 0 && moveQ[0] < 4)
       {
-        gameHandle.move(moveQ[0]);
+        _applyMove(moveQ[0]);
         if( verbose == 1 ) console.log(moveQ[0]+" "+moveMap[moveQ[0]]+" moves:"+totalMoves+" current maximum:"+_getScore());
       }
       else
@@ -92,7 +113,9 @@ function Driver2048(_solver,spd) {
         console.log("Score,moves,time(seconds)");
         console.log(_getScore()+","+totalMoves+","+(endTime - startTime)/1000);
       }
-      clearInterval(interval);
+      if(interval)  {
+        clearInterval(interval);
+      }
     }
   }
   
@@ -131,9 +154,5 @@ function Driver2048(_solver,spd) {
     }
     else
       alert("Sorry you did not provide a proper solver object! Please check it and try again...");
-  }
-
-  this.setVerbose = function(_v){
-    verbose = _v; 
   }
 }
