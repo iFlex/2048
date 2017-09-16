@@ -44,6 +44,9 @@ opt.layer_defs = layer_defs;
 opt.tdtrainer_options = tdtrainer_options;
 
 function normaliseValue(val){
+    if( val == 0 ) {
+        return 0;
+    }
     return Math.log2(val)/32.0;
 }
 
