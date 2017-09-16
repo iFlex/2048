@@ -21,7 +21,6 @@ function Driver2048(_solver,spd) {
   var endTime = 0;
   //debugging and play around
   this.board = gameHandle;
-  this.restarts = 0;
   this.scores = [];
 
   function _getGrid(){
@@ -79,9 +78,8 @@ function Driver2048(_solver,spd) {
   }
 
   this.restart = function(){
-    this.scores.push(gameHandle.getScore());
+    this.scores.push(this.getScore());
     gameHandle.restart();
-    this.restarts++;
   }
 
   this.isGameOver = function(){

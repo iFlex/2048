@@ -43,8 +43,6 @@ opt.epsilon_test_time = 0.05;
 opt.layer_defs = layer_defs;
 opt.tdtrainer_options = tdtrainer_options;
 
-var brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
-
 function normaliseValue(val){
     return Math.log2(val)/32.0;
 }
@@ -59,16 +57,19 @@ function serialiseGrid(grid){
     return result;
 }
 
-async function brainTrain(delay){
+var brain = {};
+function brainTrain(delay){
     // Highscore should probably be read from somewhere else, so we can set its goal somewhere
     var highscore = 2048;
     var score = 0;
-    while( score <= highscore ) {
+    brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
+    
+    function trainStep(){
         if(driver.isGameOver()){
             driver.restart();
         }
 
-        var input = preprocess_grid( driver.getGrid());
+        var input = serialiseGrid( driver.getGrid());
         var action = brain.forward( input );
         // action is a number in [0, num_actions) telling index of the action the agent chooses
         // here, apply the action on environment and observe some reward. Finally, communicate it:
@@ -82,14 +83,14 @@ async function brainTrain(delay){
         }
         score = crntScore;
         brain.backward(reward);
-        await sleep(delay);
+        
+        if( score <= highscore ) {
+            setTimeout(trainStep,delay);        
+        }
     }
-
+    trainStep();    
 }
 
-function sleep(ms){
-    new Promise(resolve => setTimeout(resolve, ms));
-}
 
 function brainSetDriver(eldriver){
     driver = eldriver;
