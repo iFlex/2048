@@ -21,54 +21,59 @@ function Driver2048(_solver,spd) {
   var endTime = 0;
   //debugging and play around
   this.board = gameHandle;
-  this.scores = [];
+  //statistics
+  var grid = [];
+  var score = 0;
+  var sumScore = 0;
+  var scores = [];
+  var cellCount = 0;
+  var moveCount = 0;
+  var gridScans = 0;
+  var cellDistribution = {}
+
+  function _prepStatsForUpdate(){
+    cellDistribution = {}
+    score = 0;
+    sumScore = 0;
+    cellCount = 0;
+  }
+
+  function _updateStats(value){
+    cellCount++;
+    sumScore += value;
+    if(score < value){
+      score = value;
+    }
+    if(!cellDistribution[value]){
+      cellDistribution[value] = 0;
+    }
+    cellDistribution[value] = cellDistribution[value] + 1;
+  }
 
   function _getGrid(){
-    var serial = gameHandle.grid.serialize().cells;
-    //build grid
-    var grid = [];
-    for( i = 0; i < serial.length; ++i )
-    {
-      grid[i] = [];
-      for( j = 0 ; j < serial[i].length ; ++j )
-      {
-        if( serial[i][j] )
-          grid[i][j] = serial[i][j].value  
-        else
-          grid[i][j] = 0;
+    if(gridScans == moveCount){
+      var serial = gameHandle.grid.serialize().cells;
+      //build grid
+      grid = [];
+      _prepStatsForUpdate();
+
+      for( i = 0; i < serial.length; ++i ){
+        grid[i] = [];
+        for( j = 0 ; j < serial[i].length ; ++j ){
+          if( serial[i][j] ){
+            grid[i][j] = serial[i][j].value  
+            _updateStats(grid[i][j]);
+          } else {
+            grid[i][j] = 0;
+          }
+        }
       }
     }
     return grid;
   }
 
-  function _getScore(total){
-    var grid = _getGrid();
-    var max = grid[0][0];
-
-    for( var i = 0 ; i < size ; ++ i )
-      for( var j = 0 ; j < size ; ++ j ){
-        if(total) {
-          if( i || j )
-            max += grid[i][j] 
-        } else if ( max < grid[i][j] )
-          max = grid[i][j];
-      }
-    
-    return max;
-  }
-
-  function _sumGrid(){
-    var grid = _getGrid();
-    var sum = 0;
-    for( var i = 0 ; i < size ; ++ i ){
-      for( var j = 0 ; j < size ; ++ j ){
-        sum += grid[i][j];
-      }
-    }
-    return sum;
-  }
-
   function _applyMove(move){
+    moveCount++;
     gameHandle.move(move);
   }
 
@@ -77,10 +82,10 @@ function Driver2048(_solver,spd) {
   }
   
   this.getScore = function(){
-    return _getScore();
+    return score;
   }
   this.getTrueScore = function(){
-    return _sumGrid();
+    return sumScore;
   }
 
   this.applyMove = function(move){
@@ -92,12 +97,27 @@ function Driver2048(_solver,spd) {
   }
 
   this.restart = function(){
-    this.scores.push(this.getScore());
+    scores.push(this.getScore());
+    
+    moveCount = 0;
+    gridScans = 0;
+    _prepStatsForUpdate();
+    
     gameHandle.restart();
   }
 
   this.isGameOver = function(){
     return gameHandle.isGameTerminated();
+  }
+
+  this.getStats = function(){
+    return {
+      score:score,
+      sumScore:sumScore,
+      scores:scores,
+      cellCount:cellCount,
+      cellDistribution:cellDistribution
+    }
   }
 
   function _solve(){
