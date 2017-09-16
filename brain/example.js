@@ -68,5 +68,10 @@ while( score <= highscore ) {
     brain.backward(reward);
 }
 
-// I still have to look up this function. But it should store export the network as a JSON file, which we can display in a textbox for the user to save
-save_network_as_json();
+// Save network
+saved_net = JSON.stringify( brain.value_net.toJSON() );
+// Load network
+brain.value_net.fromJSON( JSON.parse( saved_net ) );
+// Stop learning after loading the network
+brain.epsilon_test_time = 0.0; // Stop making random choices
+brain.learning = false; // And stop learning
