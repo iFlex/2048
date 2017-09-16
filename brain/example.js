@@ -147,3 +147,24 @@ function brainStop(){
     //brain.epsilon_test_time = 0.0; // Stop making random choices
     //brain.learning = false; // And stop learning
 }
+
+function sumArray(a) {
+    sum = 0;
+    for(var i = 0; i<a.length; i++){
+        sum += a[i];
+    }
+    return sum;
+}
+
+function meanArray(a) {
+    return sumArray( a ) / a.length;
+}
+
+function lastArray( a, _last ) {
+    var last = _last || 10;
+    l = [];
+    for(var i = a.length - 1; i>=0 && l.length < last; i--){
+        l.push( a[i] );
+    }
+    return l;
+}
