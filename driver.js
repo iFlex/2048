@@ -21,7 +21,9 @@ function Driver2048(_solver,spd) {
   var endTime = 0;
   //debugging and play around
   this.board = gameHandle;
-  
+  this.restarts = 0;
+  this.scores = [];
+
   function _getGrid(){
     var serial = gameHandle.grid.serialize().cells;
     //build grid
@@ -49,7 +51,10 @@ function Driver2048(_solver,spd) {
         if(total) {
           if( i || j )
             max += grid[i][j] 
-        }
+        }var driver = new Driver2048();
+window.requestAnimationFrame(function () {
+  driver.setGameManager(new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager));
+});
         else if ( max < grid[i][j] )
           max = grid[i][j];
       }
@@ -78,7 +83,9 @@ function Driver2048(_solver,spd) {
   }
 
   this.restart = function(){
+    this.scores.push(gameHandle.getScore());
     gameHandle.restart();
+    this.restarts++;
   }
 
   this.isGameOver = function(){
