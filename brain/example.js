@@ -60,25 +60,49 @@ function serialiseGrid(grid){
     return result;
 }
 
+function normaliseValueForCounting(val){
+    if( val == 0 ) {
+        return 0;
+    }
+    return Math.log2(val);
+}
+
+function serialiseGridForCounting(grid){
+    var result = [];
+    for(var i = 0; i < grid.length; ++i){
+        for( var j = 0 ; j < grid[i].length; ++j){
+            result.push(normaliseValueForCounting(grid[i][j]));
+        }
+    }
+    return result;
+}
+
+
 var brain = 0;
 var highscore = 2048;
 var score = 0;
 var trueScore = 0;
 var canRun = true;
-var IAmSoRandomLOL = 0
+var iterations = 0;
+var lastBoardCounter = 0;
+var log_every_x = 1000;
 
 function brainTrain(delay){
     // Highscore should probably be read from somewhere else, so we can set its goal somewhere
     if(!brain)
         brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
+    if(!lastBoardCounter) {
+        lastBoardCounter = makeBoardCounter();
+        lastBoardCounter[0] = 32;
+    }
+
     
     function trainStep(){
-        if( IAmSoRandomLOL > brain.learning_steps_total ) {
+        if( iterations > brain.learning_steps_total ) {
             alert( "Stopped being random" );
         }
         if(driver.isGameOver()){
             brain.backward(-32.0); // Penalize for game over
-            IAmSoRandomLOL++;
             driver.restart();
             // Reset state
             //brain.state_window = new Array(brain.window_size);
@@ -109,18 +133,37 @@ function brainTrain(delay){
         var reward = 0.0;
         // Reward it for making more points
         // We can improve this after we have the pilot working
-        
-        if( score < crntScore ) {
-            reward += 0.5;
-        }
-        if( trueScore < crntTrScr){
-            reward += 0.5;
-        }
+        var crntBoardCounter = makeBoardCounter();
+        crntBoardCounter = updateBoardCounter( crntBoardCounter, driver.getGrid() );
+        reward = rewardBoardChange( lastBoardCounter, crntBoardCounter );
 
+        if( iterations % log_every_x == 0 ) {
+            console.log( "Iteration " + iterations.toString() + ", reward: " + reward.toString() );
+            console.log( "Val\tlst\tcrt" );
+            var lastIndexWithValue = 1;
+            for( var i = 1; i<lastBoardCounter.length ; i++ ) {
+                if( lastBoardCounter[i] > 0 || crntBoardCounter[i] > 0 ) {
+                    lastIndexWithValue = i;
+                }
+            }
+
+            for( var i = 1; i<=lastIndexWithValue; i++ ) {
+                console.log( i.toString() + "\t" + lastBoardCounter[i].toString()
+                    + "\t" + crntBoardCounter[i].toString() );
+            }
+        }
+        //if( score < crntScore ) {
+        //    reward += 0.5;
+        //}
+        //if( trueScore < crntTrScr){
+        //    reward += 0.5;
+        //}
+
+        lastBoardCounter = crntBoardCounter;
         score = crntScore;
         trueScore = crntTrScr;
         brain.backward(reward);
-        IAmSoRandomLOL++;
+        iterations++;
         
         if( score <= highscore && canRun) {
             setTimeout(trainStep,delay);        
@@ -168,3 +211,44 @@ function lastArray( a, _last ) {
     }
     return l;
 }
+
+function makeBoardCounter() {
+    var board = []
+    for( var i = 0; i < 33; i++ ) {
+        board.push( 0 );
+    }
+    return board;
+}
+
+function updateBoardCounter( _boardCounter, _board ) {
+    var serializedBoard = serialiseGridForCounting( _board )
+    for( var i = 0; i < _boardCounter.length; i++ ) {
+        _boardCounter[i] = 0;
+    }
+    for( var i = 0; i < serializedBoard.length; i++ ) {
+        _boardCounter[ serializedBoard[i] ]++;
+    }
+    return _boardCounter;
+}
+
+function rewardBoardChange( _lastBoardCounter, _currentBoardCounter ) {
+    var lastBoardCounter = _lastBoardCounter.slice(0);
+    reward = 0.0;
+    for( var i = _currentBoardCounter.length - 1; i > 0 ; i-- ) {
+        if( lastBoardCounter[i] < _currentBoardCounter[i] ) {
+            lastBoardCounter[ i - 1 ] -= 2 * ( _currentBoardCounter[i] - lastBoardCounter[i] );
+            reward += i / _currentBoardCounter.length;
+        }
+    }
+    return reward;
+}
+
+//[[0,0,0,0],
+//[0,0,0,0],
+//[0,0,1,2],
+//[1,0,1,2]]
+
+//[[0,0,0,0],
+//[0,0,0,0],
+//[0,0,0,0],
+//[1,0,2,3]]
