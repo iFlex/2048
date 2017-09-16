@@ -57,12 +57,15 @@ function serialiseGrid(grid){
     return result;
 }
 
-var brain = {};
+var brain = 0;
+var highscore = 2048;
+var score = 0;
+var canRun = true;
+
 function brainTrain(delay){
     // Highscore should probably be read from somewhere else, so we can set its goal somewhere
-    var highscore = 2048;
-    var score = 0;
-    brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
+    if(!brain)
+        brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
     
     function trainStep(){
         if(driver.isGameOver()){
@@ -84,7 +87,7 @@ function brainTrain(delay){
         score = crntScore;
         brain.backward(reward);
         
-        if( score <= highscore ) {
+        if( score <= highscore && canRun) {
             setTimeout(trainStep,delay);        
         }
     }
@@ -97,6 +100,7 @@ function brainSetDriver(eldriver){
 }
 
 function brainStop(){
+    canRun = false;
     // I still have to look up this function. But it should store export the network as a JSON file, which we can display in a textbox for the user to save
     save_network_as_json();
     // Save network
