@@ -60,6 +60,7 @@ function serialiseGrid(grid){
 var brain = 0;
 var highscore = 2048;
 var score = 0;
+var trueScore = 0;
 var canRun = true;
 
 function brainTrain(delay){
@@ -77,10 +78,12 @@ function brainTrain(delay){
         // action is a number in [0, num_actions) telling index of the action the agent chooses
         // here, apply the action on environment and observe some reward. Finally, communicate it:
         driver.applyMove( action );
-        var reward = 0.0;
         var crntScore = driver.getScore();
+        var crntTrScr = driver.getTrueScore();
+        var reward = 0.0;//.5*(crntScore/highscore)+0.5*(crntScore - score)
         // Reward it for making more points
         // We can improve this after we have the pilot working
+        
         if( score > crntScore ) {
             reward = 1.0;
         }

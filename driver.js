@@ -51,10 +51,21 @@ function Driver2048(_solver,spd) {
           if( i || j )
             max += grid[i][j] 
         } else if ( max < grid[i][j] )
-          max = grid[i][j];Driver2048
+          max = grid[i][j];
       }
     
     return max;
+  }
+
+  function _sumGrid(){
+    var grid = _getGrid();
+    var sum = 0;
+    for( var i = 0 ; i < size ; ++ i ){
+      for( var j = 0 ; j < size ; ++ j ){
+        sum += grid[i][j];
+      }
+    }
+    return sum;
   }
 
   function _applyMove(move){
@@ -67,6 +78,9 @@ function Driver2048(_solver,spd) {
   
   this.getScore = function(){
     return _getScore();
+  }
+  this.getTrueScore = function(){
+    return _sumGrid();
   }
 
   this.applyMove = function(move){
