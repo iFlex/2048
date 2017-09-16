@@ -51,12 +51,8 @@ function Driver2048(_solver,spd) {
         if(total) {
           if( i || j )
             max += grid[i][j] 
-        }var driver = new Driver2048();
-window.requestAnimationFrame(function () {
-  driver.setGameManager(new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager));
-});
-        else if ( max < grid[i][j] )
-          max = grid[i][j];
+        } else if ( max < grid[i][j] )
+          max = grid[i][j];Driver2048
       }
     
     return max;
