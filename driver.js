@@ -197,4 +197,8 @@ function Driver2048(_solver,spd) {
     else
       alert("Sorry you did not provide a proper solver object! Please check it and try again...");
   }
+
+  this.noRendering = function(){
+    gameHandle.setNoRendering(true);
+  }
 }

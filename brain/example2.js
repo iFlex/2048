@@ -111,6 +111,8 @@ function calculateReward(){
 }
 
 function brainTrain(delay){
+    if(delay < 100)
+        driver.noRendering();
     // Highscore should probably be read from somewhere else, so we can set its goal somewhere
     if(!brain)
         brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo

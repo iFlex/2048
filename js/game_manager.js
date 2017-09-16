@@ -1,9 +1,9 @@
-function GameManager(size, InputManager, Actuator, StorageManager) {
+function GameManager(size, InputManager, Actuator, StorageManager,noRendering) {
   this.size           = size; // Size of the grid
   this.inputManager   = new InputManager;
   this.storageManager = new StorageManager;
   this.actuator       = new Actuator;
-
+  this.noRendering    = noRendering;
   this.startTiles     = 2;
 
   this.inputManager.on("move", this.move.bind(this));
@@ -13,6 +13,9 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.setup();
 }
 
+GameManager.prototype.setNoRendering = function(dntRndr){
+  this.noRendering = dntRndr;
+}
 // Restart the game
 GameManager.prototype.restart = function () {
   this.storageManager.clearGameState();
@@ -87,15 +90,15 @@ GameManager.prototype.actuate = function () {
   } else {
     this.storageManager.setGameState(this.serialize());
   }
-
-  this.actuator.actuate(this.grid, {
-    score:      this.score,
-    over:       this.over,
-    won:        this.won,
-    bestScore:  this.storageManager.getBestScore(),
-    terminated: this.isGameTerminated()
-  });
-
+  if(!this.noRendering) {
+    this.actuator.actuate(this.grid, {
+      score:      this.score,
+      over:       this.over,
+      won:        this.won,
+      bestScore:  this.storageManager.getBestScore(),
+      terminated: this.isGameTerminated()
+    });
+  }
 };
 
 // Represent the current game as an object
