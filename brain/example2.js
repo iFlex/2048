@@ -10,7 +10,7 @@
 var num_inputs = 4*4; // 4x4 grid with values
 // We could also use it as 4x4x32 with a one-hot vector of dimension 32 instead of a linear value on the input
 var num_actions = 4; // Slide up,right,down,left
-var temporal_window = 0; // amount of temporal memory
+var temporal_window = 4; // amount of temporal memory
 var network_size = num_inputs*temporal_window + num_actions*temporal_window + num_inputs; // This means the network will get its last temporal_memory input and output values to work with as well
 var driver = 0;
 ////////////////////
@@ -36,8 +36,8 @@ opt.temporal_window = temporal_window;
 opt.experience_size = 3000;
 opt.start_learn_threshold = 1000;
 opt.gamma = 0.7;
-opt.learning_steps_total = 2000;//200000;
-opt.learning_steps_burnin = 300;//3000;
+opt.learning_steps_total = 20000;//200000;
+opt.learning_steps_burnin = 3000;//3000;
 opt.epsilon_min = 0.05;
 opt.epsilon_test_time = 0.05;
 opt.layer_defs = layer_defs;
@@ -75,10 +75,39 @@ var statsAfter = {};
 var statsBefore = {};
 
 function calculateReward(){
-    console.log("STATS")
-    console.log(statsBefore);
-    console.log(statsAfter);
-    return 1.0;
+    /*var difs = {};
+    var lastNonZero = 0;
+    for(var i in statsAfter.cellDistribution)
+        difs[i] = statsAfter.cellDistribution[i];
+    for(var i in statsBefore.cellDistribution){
+        if(!difs[i])
+            difs[i] = 0;
+        difs[i] = difs[i] - statsBefore.cellDistribution[i];
+    }
+    var totalWeight = 0.0;
+    for(var i in difs){
+        totalWeight += Math.log2(i);
+    }
+    var reward = 0.0
+    var weight = 0.0;
+    var lg = 0;
+    for( var i in difs){
+        lg = Math.log2(i);
+        weight = lg/totalWeight;
+        if(lg < 3){
+            reward += weight*(i*(-difs[i]));
+        } else {
+            reward += weight*(i*Math.abs(difs[i]));
+        }
+    }
+    return reward;
+*/  
+    return 1.0 - (2048.0 - statsAfter.score) / 2048.0;
+    //console.log(statsBefore)
+    //console.log(statsAfter)
+    //console.log(difs);
+
+    //return statsBefore.cellCount - statsAfter.cellCount 
 }
 
 function brainTrain(delay){
@@ -88,7 +117,7 @@ function brainTrain(delay){
     
     function trainStep(){
         if( iterations > brain.learning_steps_total ) {
-            alert( "Stopped being random" );
+            console.log( "Stopped being random" );
         }
         
         if(driver.isGameOver()){
@@ -99,7 +128,7 @@ function brainTrain(delay){
         statsBefore = driver.getStats();
         var input = serialiseGrid( driver.getGrid());
         var action = brain.forward( input );
-        console.log("ACTION:"+action);
+        //console.log("ACTION:"+action);
         driver.applyMove( action );
         statsAfter = driver.getStats();
         
@@ -107,7 +136,7 @@ function brainTrain(delay){
         iterations++;
         
         if( statsAfter.score <= highscore && canRun) {
-            setTimeout(trainStep,2000);        
+            setTimeout(trainStep,delay);        
         }
     }
     trainStep();    

@@ -29,6 +29,7 @@ function Driver2048(_solver,spd) {
   var cellCount = 0;
   var moveCount = 0;
   var gridScans = 0;
+  var maxScore = 0;
   var cellDistribution = {}
 
   function _prepStatsForUpdate(){
@@ -44,6 +45,9 @@ function Driver2048(_solver,spd) {
     if(score < value){
       score = value;
     }
+    if(maxScore < score){
+      maxScore = score;
+    }
     if(!cellDistribution[value]){
       cellDistribution[value] = 0;
     }
@@ -52,6 +56,7 @@ function Driver2048(_solver,spd) {
 
   function _getGrid(){
     if(gridScans == moveCount){
+      gridScans++;
       var serial = gameHandle.grid.serialize().cells;
       //build grid
       grid = [];
@@ -112,11 +117,13 @@ function Driver2048(_solver,spd) {
 
   this.getStats = function(){
     return {
+      games:scores.length,
       score:score,
       sumScore:sumScore,
       scores:scores,
       cellCount:cellCount,
-      cellDistribution:cellDistribution
+      cellDistribution:cellDistribution,
+      maxScore:maxScore
     }
   }
 
